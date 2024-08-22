@@ -4,6 +4,7 @@ node_modules/
 # Arquivos de ambiente
 .env
 .vscode
+package-lock.json
 
 # Logs
 npm-debug.log*
