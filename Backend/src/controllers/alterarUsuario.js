@@ -1,3 +1,5 @@
+const { sql, connectToDatabase } = require('../config/db');
+
 // Função para alterar os dados de um usuário na tabela "Usuarios"
 async function alterarUsuario(req, res) {
     const id = req.query.id || req.query.ID;

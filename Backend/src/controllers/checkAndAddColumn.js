@@ -1,7 +1,7 @@
 const { sql, connectToDatabase } = require('../config/db');
 
 // Função para verificar se a coluna "Senha" existe na tabela "Usuarios" e adicioná-la se não existir
-async function checkAndAddColumn() {
+async function checkAndAddColumn(req, res, next) {
     try {
         // Conecta ao banco de dados
         await connectToDatabase();
@@ -24,14 +24,15 @@ async function checkAndAddColumn() {
         } else {
             console.log('Coluna "Senha" já existe na tabela Usuarios.');
         }
+        next();
     } catch (err) {
         console.error('Erro ao verificar ou adicionar coluna:', err);
+        res.status(500).send('Erro ao verificar ou adicionar coluna.');
     }
 }
 
-module.exports = {
-    checkAndAddColumn,
-};
+module.exports = checkAndAddColumn
+
 
 
 

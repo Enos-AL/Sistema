@@ -1,4 +1,4 @@
-const sql = require('../config/db');
+const {sql} = require('../config/db');
 
 // Função para buscar todos os usuários na tabela "Usuarios"
 async function buscarUsuarios(req, res) {

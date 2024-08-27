@@ -1,3 +1,5 @@
+const { sql, connectToDatabase } = require('../config/db');
+
 // Função para excluir um usuário da tabela "Usuarios"
 async function excluirUsuario(req, res) {
     const { id, nome } = req.body;
