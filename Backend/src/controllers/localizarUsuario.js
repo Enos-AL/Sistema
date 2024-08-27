@@ -3,18 +3,26 @@ const { sql, connectToDatabase } = require('../config/db');
 // Função para localizar um usuário na tabela "Usuarios" por ID ou nome
 async function localizarUsuario(req, res) {
     const id = req.query.id || req.query.ID;
-    const nome = req.query.nome || req.query.NOME;
+    const nomeCompleto = req.query.nome || req.query.NOME;
 
     try {
         // Conecta ao banco de dados
         await connectToDatabase();
 
         let result;
-        // Consulta o usuário pelo ID ou nome
         if (id) {
+            // Consulta o usuário pelo ID
             result = await sql.query`SELECT * FROM Usuarios WHERE ID = ${parseInt(id, 10)}`;
-        } else if (nome) {
-            result = await sql.query`SELECT * FROM Usuarios WHERE Nome = ${nome}`;
+        } else if (nomeCompleto) {
+            // Divide o nome completo em partes, assumindo que é no formato "PrimeiroNome.SegundoNome"
+            const [primeiroNome, segundoNome] = nomeCompleto.split('.');
+
+            // Consulta pelo nome completo (primeiro e segundo nome separados por espaço)
+            result = await sql.query`
+                SELECT * FROM Usuarios 
+                WHERE Nome = ${primeiroNome} + ' ' + ${segundoNome}
+                OR Nome = ${nomeCompleto} -- Para buscar o nome completo se passado
+            `;
         } else {
             return res.status(400).send('Por favor, forneça um ID ou nome completo para localizar o usuário.');
         }
@@ -30,9 +38,6 @@ async function localizarUsuario(req, res) {
         res.status(500).send('Erro ao localizar usuário.');
     }
 }
-
-
-
 
 module.exports = {
     localizarUsuario,
