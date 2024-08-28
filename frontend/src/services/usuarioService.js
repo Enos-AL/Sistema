@@ -26,6 +26,7 @@ const usuarioService = {
         });
         return response.data;
     },
+    
 
     localizarUsuario: async (nome) => {
         const response = await axios.get(`${API_URL}/localizar`, {

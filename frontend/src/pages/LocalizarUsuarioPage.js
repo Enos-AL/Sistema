@@ -1,29 +1,40 @@
 import React, { useState } from 'react';
+import { Input, Button, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import usuarioService from '../services/usuarioService';
-import LocalizarUsuarioTable from '../components/Table/LocalizarUsuarioTable';
 
-const LocalizarUsuarioPage = () => {
-    const [usuario, setUsuario] = useState(null);
+const LocalizarUsuario = () => {
     const [nome, setNome] = useState('');
+    const navigate = useNavigate();
 
-    const handleSearch = async () => {
-        const resultado = await usuarioService.localizarUsuario(nome);
-        setUsuario(resultado);
+    const handleLocalizar = async () => {
+        try {
+            const usuarioLocalizado = await usuarioService.localizarUsuario(nome);
+            if (usuarioLocalizado) {
+                // Redireciona para a página de alteração com o ID do usuário
+                navigate(`/alterar-usuario/${usuarioLocalizado.ID}`, { state: usuarioLocalizado });
+            } else {
+                message.error('Usuário não encontrado.');
+            }
+        } catch (error) {
+            console.error('Erro ao localizar usuário:', error);
+            message.error('Erro ao localizar usuário.');
+        }
     };
 
     return (
         <div>
-            <h1>Localizar Usuário</h1>
-            <input 
-                type="text" 
-                value={nome} 
-                onChange={(e) => setNome(e.target.value)} 
-                placeholder="Nome do Usuário" 
+            <h2>Localizar Usuário</h2>
+            <Input
+                placeholder="Digite o nome do usuário"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
             />
-            <button onClick={handleSearch}>Buscar</button>
-            {usuario && <LocalizarUsuarioTable usuario={usuario} />}
+            <Button type="primary" onClick={handleLocalizar}>
+                Localizar Usuário
+            </Button>
         </div>
     );
 };
 
-export default LocalizarUsuarioPage;
+export default LocalizarUsuario;

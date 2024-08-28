@@ -13,18 +13,18 @@ const excluirUsuario = require('../controllers/excluirUsuario');
 router.post('/checkAndAddColumn', checkAndAddColumn); // Apenas verifica e adiciona a coluna
 
 // Rota para inserir um usuário
-router.post('/', inserirUsuario.inserirUsuario); // Insere um novo usuário
+router.post('/inserir', inserirUsuario.inserirUsuario); // Insere um novo usuário
 
 // Rota para buscar todos os usuários
-router.get('/', buscarUsuarios.buscarUsuarios); // Busca todos os usuários
+router.get('/buscar', buscarUsuarios.buscarUsuarios); // Busca todos os usuários
 
 // Rota para localizar um usuário por ID ou nome
 router.get('/localizar', localizarUsuario.localizarUsuario); // Localiza um usuário
 
 // Rota para alterar um usuário por ID
-router.put('/:id', alterarUsuario.alterarUsuario); // Altera um usuário existente
+router.put('/alterar/:id', alterarUsuario.alterarUsuario); // Altera um usuário existente
 
 // Rota para excluir um usuário por ID e nome completo
-router.delete('/', excluirUsuario.excluirUsuario); // Exclui um usuário
+router.delete('/excluir', excluirUsuario.excluirUsuario); // Exclui um usuário
 
 module.exports = router;

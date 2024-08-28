@@ -1,25 +1,93 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Input, Button, Form, message } from 'antd';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import usuarioService from '../services/usuarioService';
-import AlterarUsuarioForm from '../components/Form/AlterarUsuarioForm';
 
-const AlterarUsuarioPage = ({ match }) => {
-    const [usuario, setUsuario] = useState(null);
-    const usuarioId = match.params.id;
+const AlterarUsuario = () => {
+    const { id } = useParams(); // Pega o ID da URL
+    const navigate = useNavigate();
+    const location = useLocation(); // Acessa o estado passado na navegação
+    const [usuario, setUsuario] = useState({ nome: '', email: '', senha: '' });
 
     useEffect(() => {
-        async function fetchData() {
-            const data = await usuarioService.localizarUsuario(usuarioId);
-            setUsuario(data);
+        if (location.state) {
+            setUsuario({
+                nome: location.state.Nome,
+                email: location.state.Email,
+                senha: location.state.Senha,
+            });
+        } else {
+            const fetchUsuario = async () => {
+                try {
+                    const usuarioLocalizado = await usuarioService.localizarUsuario(id);
+                    setUsuario({
+                        nome: usuarioLocalizado.Nome,
+                        email: usuarioLocalizado.Email,
+                        senha: usuarioLocalizado.Senha,
+                    });
+                } catch (error) {
+                    console.error('Erro ao buscar usuário:', error);
+                    message.error('Erro ao buscar dados do usuário.');
+                }
+            };
+
+            fetchUsuario();
         }
-        fetchData();
-    }, [usuarioId]);
+    }, [id, location.state]);
+
+    const handleAlterar = async () => {
+        try {
+            await usuarioService.alterarUsuario(id, usuario);
+            message.success('Usuário alterado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao alterar usuário:', error);
+            message.error('Erro ao alterar usuário.');
+        }
+    };
+
+    const handleExcluir = async () => {
+        try {
+            await usuarioService.excluirUsuario(id, usuario.nome);
+            message.success('Usuário excluído com sucesso!');
+            navigate('/buscar-usuarios');
+        } catch (error) {
+            console.error('Erro ao excluir usuário:', error);
+            message.error('Erro ao excluir usuário.');
+        }
+    };
 
     return (
         <div>
-            <h1>Alterar Usuário</h1>
-            {usuario && <AlterarUsuarioForm usuario={usuario} />}
+            <h2>Alterar Usuário</h2>
+            <Form onFinish={handleAlterar}>
+                <Form.Item label="Nome">
+                    <Input
+                        value={usuario.nome}
+                        onChange={(e) => setUsuario({ ...usuario, nome: e.target.value })}
+                    />
+                </Form.Item>
+                <Form.Item label="Email">
+                    <Input
+                        value={usuario.email}
+                        onChange={(e) => setUsuario({ ...usuario, email: e.target.value })}
+                    />
+                </Form.Item>
+                <Form.Item label="Senha">
+                    <Input
+                        type="password"
+                        value={usuario.senha}
+                        onChange={(e) => setUsuario({ ...usuario, senha: e.target.value })}
+                    />
+                </Form.Item>
+                <Button type="primary" htmlType="submit">
+                    Alterar Usuário
+                </Button>
+                <Button type="danger" onClick={handleExcluir} style={{ marginLeft: '10px' }}>
+                    Excluir Usuário
+                </Button>
+            </Form>
         </div>
     );
 };
 
-export default AlterarUsuarioPage;
+export default AlterarUsuario;

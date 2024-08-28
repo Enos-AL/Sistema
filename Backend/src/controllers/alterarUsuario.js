@@ -2,7 +2,12 @@ const { sql, connectToDatabase } = require('../config/db');
 
 // Função para alterar os dados de um usuário na tabela "Usuarios"
 async function alterarUsuario(req, res) {
+
+    console.log('Recebido req.query:', req.query);
+    console.log('Recebido req.body:', req.body);
+
     const id = req.params.id; // ID do usuário a ser alterado, fornecido na URL
+    console.log('ID recebido:', id);
     const nomeCompleto = req.body.nomeCompleto; // Nome completo fornecido no corpo da requisição (opcional)
     const novosDados = req.body; // Dados para atualizar
 
@@ -23,9 +28,13 @@ async function alterarUsuario(req, res) {
 
         // Se o usuário não for encontrado, retorna erro 404
         if (usuarioExistente.recordset.length === 0) {
+            console.log('Usuário não encontrado:', id);
             return res.status(404).send('Usuário não encontrado com o ID fornecido.');
+        } else {
+            console.log('Usuário encontrado:', usuarioExistente.recordset[0]);
         }
 
+            // Essa parte o frontend não está configurado para fazer. Verificar com a IA.
         // Se o nome completo for fornecido, verifica se corresponde ao usuário
         if (nomeCompleto) {
             // Divide o nome completo no formato "PrimeiroNome.SegundoNome" se necessário
@@ -45,10 +54,10 @@ async function alterarUsuario(req, res) {
         }
 
         // Verifica a confirmação para realizar a alteração
-        const confirmacao = req.query.confirmacao; // Espera-se que a confirmação seja fornecida como um parâmetro de consulta
-        if (confirmacao !== 'true') { // A confirmação deve ser uma string 'true'
+        const confirmacao = req.query.confirmacao || 'false'; // Padrão para 'false' se não fornecido
+        if (confirmacao !== 'true') {
             return res.status(400).send('Confirmação não realizada. As alterações não foram aplicadas.');
-        }
+        }       
 
         // Cria a query de atualização com base nos novos dados fornecidos
         const queryParts = [];
