@@ -35,6 +35,7 @@ const AlterarUsuario = () => {
         }
     }, [id, location.state]);
 
+    // Esse código está diferente do que a IA me mostrou pro último, verificar a manhã dia 29
     const handleAlterar = async () => {
         try {
             await usuarioService.alterarUsuario(id, usuario);
