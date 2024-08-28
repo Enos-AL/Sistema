@@ -1,20 +1,15 @@
 const express = require('express');
-const { connectToDatabase } = require('./config/db');
-
 const app = express();
+const usuariosRouter = require('./routes/usuarios');
+const bodyParser = require('body-parser');
 
-// Conectar ao banco de dados
-connectToDatabase();
+app.use(bodyParser.json());
 
-// Middleware para analisar JSON
-app.use(express.json());
+// Configura as rotas dos usuários
+app.use('/usuarios', usuariosRouter);
 
-// Rotas
-const usuariosRoutes = require('./routes/usuarios');
-app.use('/usuarios', usuariosRoutes);
-
-// Usar a porta definida no .env ou 3000 como padrão
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+// Inicializa o servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
