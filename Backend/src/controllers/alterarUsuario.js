@@ -3,7 +3,6 @@ const { sql, connectToDatabase } = require('../config/db');
 // Função para alterar os dados de um usuário na tabela "Usuarios"
 async function alterarUsuario(req, res) {
     const id = req.params.id; // ID do usuário a ser alterado, fornecido na URL
-    const nomeCompleto = req.body.nomeCompleto; // Nome completo fornecido no corpo da requisição (opcional)
     const novosDados = req.body; // Dados para atualizar
 
     // Verifica se o ID foi fornecido
@@ -26,38 +25,15 @@ async function alterarUsuario(req, res) {
             return res.status(404).send('Usuário não encontrado com o ID fornecido.');
         }
 
-        // Se o nome completo for fornecido, verifica se corresponde ao usuário
-        if (nomeCompleto) {
-            const [primeiroNome, segundoNome] = nomeCompleto.split('.');
-            const nomeCompletoFormatado = primeiroNome && segundoNome ? primeiroNome + ' ' + segundoNome : nomeCompleto;
+        // Cria a query de atualização com base nos novos dados fornecidos dinamicamente
+        const queryParts = Object.keys(novosDados).map(coluna => `${coluna} = '${novosDados[coluna]}'`).join(', ');
 
-            const usuarioExistentePorNome = await sql.query`
-                SELECT * FROM Usuarios 
-                WHERE Nome = ${nomeCompletoFormatado} AND ID = ${parseInt(id, 10)}
-            `;
-
-            if (usuarioExistentePorNome.recordset.length === 0) {
-                return res.status(400).send('Nome fornecido não corresponde ao ID fornecido.');
-            }
-        }
-
-        // Verifica a confirmação para realizar a alteração
-        const confirmacao = req.query.confirmacao || 'false'; // Padrão para 'false' se não fornecido
-        if (confirmacao !== 'true') {
-            return res.status(400).send('Confirmação não realizada. As alterações não foram aplicadas.');
-        }
-
-        // Cria a query de atualização com base nos novos dados fornecidos
-        const queryParts = [];
-        if (novosDados.Nome) queryParts.push(`Nome = '${novosDados.Nome}'`);
-        if (novosDados.Email) queryParts.push(`Email = '${novosDados.Email}'`);
-        if (novosDados.Senha) queryParts.push(`Senha = '${novosDados.Senha}'`);
-
+        // Verifica se há dados para alterar
         if (queryParts.length === 0) {
             return res.status(400).send('Nenhum dado fornecido para alteração.');
         }
 
-        const updateQuery = `UPDATE Usuarios SET ${queryParts.join(', ')} WHERE ID = ${parseInt(id, 10)}`;
+        const updateQuery = `UPDATE Usuarios SET ${queryParts} WHERE ID = ${parseInt(id, 10)}`;
 
         // Executa a query de atualização
         await sql.query(updateQuery);
