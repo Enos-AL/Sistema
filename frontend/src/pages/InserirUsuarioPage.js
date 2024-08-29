@@ -3,7 +3,7 @@ import InserirUsuarioForm from '../components/Form/InserirUsuarioForm';
 
 const InserirUsuarioPage = () => (
     <div>
-        <h1>Inserir Usuário</h1>
+        <h2>Inserir Usuário</h2>
         <InserirUsuarioForm />
     </div>
 );

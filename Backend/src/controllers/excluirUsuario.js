@@ -10,7 +10,6 @@ async function excluirUsuario(req, res) {
     }
 
     try {
-        // Conecta ao banco de dados
         await connectToDatabase();
 
         // Verifica se o usuário existe com o ID e nome fornecidos

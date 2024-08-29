@@ -1,5 +1,5 @@
-const { sql } = require('../config/db');
-const checkAndAddColumn = require('../controllers/checkAndAddColumn')
+const { sql, connectToDatabase } = require('../config/db');
+const checkAndModifyColumn = require('../controllers/checkAndAddColumn');
 
 // Função para inserir um novo usuário na tabela "Usuarios"
 async function inserirUsuario(req, res) {
@@ -7,7 +7,7 @@ async function inserirUsuario(req, res) {
 
     try {
         // Verifica e adiciona a coluna "Senha" se necessário
-        await checkAndAddColumn(req, res, () => {}); // Passa req, res e uma função vazia como próximo middleware
+        await checkAndModifyColumn(req, res, () => {}); // Passa req, res e uma função vazia como próximo middleware
 
         // Insere um novo registro na tabela "Usuarios"
         await sql.query`

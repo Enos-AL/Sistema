@@ -6,6 +6,7 @@ import BuscarUsuariosPage from '../pages/BuscarUsuariosPage';
 import AlterarUsuarioPage from '../pages/AlterarUsuarioPage';
 import LocalizarUsuarioPage from '../pages/LocalizarUsuarioPage';
 import ColumnManagerPage from '../pages/ColumnManagerPage'; // Nova página
+import AdicionarColuna from '../pages/AdicionarColuna';
 
 const AppRoutes = () => (
     <Router>
@@ -16,6 +17,8 @@ const AppRoutes = () => (
             <Route path="/alterar-usuario/:id" element={<AlterarUsuarioPage />} />
             <Route path="/localizar-usuario" element={<LocalizarUsuarioPage />} />
             <Route path="/gerenciar-colunas" element={<ColumnManagerPage />} /> {/* Nova rota */}
+            <Route path="/" element={<ColumnManagerPage />} />
+            <Route path="/adicionar-coluna/:nomeColuna" element={<AdicionarColuna />} />
         </Routes>
     </Router>
 );

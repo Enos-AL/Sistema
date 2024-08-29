@@ -6,7 +6,6 @@ async function localizarUsuario(req, res) {
     const nomeCompleto = req.query.nome || req.query.NOME;
 
     try {
-        // Conecta ao banco de dados
         await connectToDatabase();
 
         let result;
@@ -21,13 +20,12 @@ async function localizarUsuario(req, res) {
             result = await sql.query`
                 SELECT * FROM Usuarios 
                 WHERE Nome = ${primeiroNome} + ' ' + ${segundoNome}
-                OR Nome = ${nomeCompleto} -- Para buscar o nome completo se passado
+                OR Nome = ${nomeCompleto}
             `;
         } else {
             return res.status(400).send('Por favor, forneça um ID ou nome completo para localizar o usuário.');
         }
 
-        // Se o usuário não for encontrado, retorna erro 404
         if (result.recordset.length === 0) {
             return res.status(404).send('Usuário não encontrado.');
         }
