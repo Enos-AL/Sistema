@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-// Remova o `useNavigate` import caso não esteja utilizando
-// import { useNavigate } from 'react-router-dom';
 import usuarioService from '../services/usuarioService';
 
 const LocalizarUsuarioPage = () => {
-    const [usuario, setUsuario] = useState({});
-    const [id, setId] = useState('');
+    const [usuario, setUsuario] = useState(null); // Inicializa o estado do usuário como null
     const [nome, setNome] = useState('');
 
     const handleLocalizar = async () => {
         try {
-            const dadosUsuario = await usuarioService.localizarUsuario(nome || id);
-            setUsuario(dadosUsuario);
+            const dadosUsuario = await usuarioService.localizarUsuario(nome);
+            setUsuario(dadosUsuario); // Define o usuário localizado
         } catch (error) {
             alert('Erro ao localizar usuário.');
         }
@@ -39,12 +36,6 @@ const LocalizarUsuarioPage = () => {
             <h1>Localizar Usuário</h1>
             <input 
                 type="text" 
-                placeholder="ID do Usuário" 
-                value={id} 
-                onChange={(e) => setId(e.target.value)} 
-            />
-            <input 
-                type="text" 
                 placeholder="Nome Completo do Usuário" 
                 value={nome} 
                 onChange={(e) => setNome(e.target.value)} 
@@ -53,13 +44,25 @@ const LocalizarUsuarioPage = () => {
 
             {usuario && (
                 <div>
-                    {Object.keys(usuario).map((coluna, index) => (
+                    {/* Exibe o ID do usuário, mas não permite edição */}
+                    <div>
+                        <label>ID</label>
+                        <input 
+                            type="text" 
+                            name="id" 
+                            value={usuario.id || ''} 
+                            readOnly 
+                        />
+                    </div>
+
+                    {/* Exibe e permite editar os demais campos */}
+                    {Object.keys(usuario).filter(coluna => coluna !== 'id').map((coluna, index) => (
                         <div key={index}>
                             <label>{coluna}</label>
                             <input 
                                 type="text" 
                                 name={coluna} 
-                                value={usuario[coluna]} 
+                                value={usuario[coluna] || ''}  // Se o valor for null ou undefined, usa uma string vazia
                                 onChange={handleChange} 
                             />
                         </div>

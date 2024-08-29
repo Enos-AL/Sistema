@@ -2,8 +2,8 @@ const { sql, connectToDatabase } = require('../config/db');
 
 // Função para localizar um usuário na tabela "Usuarios" por ID ou nome
 async function localizarUsuario(req, res) {
-    const id = req.query.id || req.query.ID;
-    const nomeCompleto = req.query.nome || req.query.NOME;
+    const id = req.query.id;
+    const nomeCompleto = req.query.nome;
 
     try {
         await connectToDatabase();
@@ -30,7 +30,9 @@ async function localizarUsuario(req, res) {
             return res.status(404).send('Usuário não encontrado.');
         }
 
-        res.json(result.recordset[0]);
+        // Assume-se que o resultado deve ser um único registro
+        const usuario = result.recordset[0];
+        res.json(usuario);
     } catch (err) {
         console.error('Erro ao localizar usuário:', err);
         res.status(500).send('Erro ao localizar usuário.');

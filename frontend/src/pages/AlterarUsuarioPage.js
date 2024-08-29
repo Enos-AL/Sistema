@@ -4,26 +4,38 @@ import usuarioService from '../services/usuarioService';
 
 const AlterarUsuarioPage = () => {
     const location = useLocation();
-    const [usuario, setUsuario] = useState(location.state?.usuario || {});
     const navigate = useNavigate();
+    const [usuario, setUsuario] = useState(location.state?.usuario || {});
 
     useEffect(() => {
         // Verifica se os dados do usuário foram passados corretamente
         if (!usuario.id) {
             navigate('/localizar-usuario');
         }
-    }, [usuario, navigate]);
+    }, [usuario.id, navigate]);
 
     const handleAlterar = async () => {
-        await usuarioService.alterarUsuario(usuario.id, usuario);
-        alert('Usuário alterado com sucesso!');
-        navigate('/localizar-usuario');
+        try {
+            await usuarioService.alterarUsuario(usuario.id, usuario);
+            alert('Usuário alterado com sucesso!');
+            navigate('/localizar-usuario');
+        } catch (error) {
+            alert('Erro ao alterar usuário.');
+        }
     };
 
     const handleExcluir = () => {
         if (window.confirm('Deseja realmente excluir este usuário?')) {
             navigate(`/excluir-usuario`, { state: { usuario } });
         }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUsuario(prevUsuario => ({
+            ...prevUsuario,
+            [name]: value
+        }));
     };
 
     return (
@@ -34,8 +46,9 @@ const AlterarUsuarioPage = () => {
                     <label>{coluna}:</label>
                     <input 
                         type="text" 
-                        value={usuario[coluna]} 
-                        onChange={(e) => setUsuario({ ...usuario, [coluna]: e.target.value })} 
+                        name={coluna}  // Atributo name adicionado para identificar o campo
+                        value={usuario[coluna] || ''} // Garante que o valor seja uma string vazia se undefined
+                        onChange={handleChange} 
                     />
                 </div>
             ))}
