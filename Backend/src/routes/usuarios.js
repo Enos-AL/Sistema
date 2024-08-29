@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Certifique-se de que a função é uma função de middleware válida
-const checkAndAddColumn = require('../controllers/checkAndAddColumn');
+const checkAndModifyColumn = require('../controllers/checkAndAddColumn');
 const buscarUsuarios = require('../controllers/buscarUsuarios');
 const inserirUsuario = require('../controllers/inserirUsuario');
 const localizarUsuario = require('../controllers/localizarUsuario');
@@ -10,7 +10,7 @@ const alterarUsuario = require('../controllers/alterarUsuario');
 const excluirUsuario = require('../controllers/excluirUsuario');
 
 // Rota para verificar e adicionar coluna do usuário (se necessário)
-router.post('/checkAndAddColumn', checkAndAddColumn); // Apenas verifica e adiciona a coluna
+router.post('/checkAndModifyColumn', checkAndModifyColumn); // Apenas verifica e adiciona a coluna
 
 // Rota para inserir um usuário
 router.post('/inserir', inserirUsuario.inserirUsuario); // Insere um novo usuário

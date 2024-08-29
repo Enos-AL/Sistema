@@ -2,12 +2,13 @@ const { sql, connectToDatabase } = require('../config/db');
 
 // Função para alterar os dados de um usuário na tabela "Usuarios"
 async function alterarUsuario(req, res) {
-
+    
     console.log('Recebido req.query:', req.query);
     console.log('Recebido req.body:', req.body);
 
     const id = req.params.id; // ID do usuário a ser alterado, fornecido na URL
     console.log('ID recebido:', id);
+
     const nomeCompleto = req.body.nomeCompleto; // Nome completo fornecido no corpo da requisição (opcional)
     const novosDados = req.body; // Dados para atualizar
 

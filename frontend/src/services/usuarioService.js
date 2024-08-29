@@ -21,13 +21,10 @@ const usuarioService = {
     },
 
     alterarUsuario: async (id, novosDados) => {
-        const response = await axios.put(`${API_URL}/alterar/${id}`, novosDados, {
-            params: { confirmacao: 'true' }
-        });
+        const response = await axios.put(`${API_URL}/alterar/${id}?confirmacao=true`, novosDados);
         return response.data;
     },
     
-
     localizarUsuario: async (nome) => {
         const response = await axios.get(`${API_URL}/localizar`, {
             params: { nome }
@@ -35,8 +32,8 @@ const usuarioService = {
         return response.data;
     },
 
-    checkAndAddColumn: async (coluna) => {
-        const response = await axios.post(`${API_URL}/checkAndAddColumn`, { coluna });
+    checkAndModifyColumn: async (data) => {
+        const response = await axios.post(`${API_URL}/checkAndModifyColumn`, data);
         return response.data;
     }
 };

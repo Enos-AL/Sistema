@@ -7,23 +7,23 @@ const AlterarUsuario = () => {
     const { id } = useParams(); // Pega o ID da URL
     const navigate = useNavigate();
     const location = useLocation(); // Acessa o estado passado na navegação
-    const [usuario, setUsuario] = useState({ nome: '', email: '', senha: '' });
+    const [usuario, setUsuario] = useState({ Nome: '', Email: '', Senha: '' });
 
     useEffect(() => {
         if (location.state) {
             setUsuario({
-                nome: location.state.Nome,
-                email: location.state.Email,
-                senha: location.state.Senha,
+                Nome: location.state.Nome,
+                Email: location.state.Email,
+                Senha: location.state.Senha,
             });
         } else {
             const fetchUsuario = async () => {
                 try {
                     const usuarioLocalizado = await usuarioService.localizarUsuario(id);
                     setUsuario({
-                        nome: usuarioLocalizado.Nome,
-                        email: usuarioLocalizado.Email,
-                        senha: usuarioLocalizado.Senha,
+                        Nome: usuarioLocalizado.Nome,
+                        Email: usuarioLocalizado.Email,
+                        Senha: usuarioLocalizado.Senha,
                     });
                 } catch (error) {
                     console.error('Erro ao buscar usuário:', error);
@@ -48,7 +48,7 @@ const AlterarUsuario = () => {
 
     const handleExcluir = async () => {
         try {
-            await usuarioService.excluirUsuario(id, usuario.nome);
+            await usuarioService.excluirUsuario(id, usuario.Nome);
             message.success('Usuário excluído com sucesso!');
             navigate('/buscar-usuarios');
         } catch (error) {
@@ -63,21 +63,21 @@ const AlterarUsuario = () => {
             <Form onFinish={handleAlterar}>
                 <Form.Item label="Nome">
                     <Input
-                        value={usuario.nome}
-                        onChange={(e) => setUsuario({ ...usuario, nome: e.target.value })}
+                        value={usuario.Nome}
+                        onChange={(e) => setUsuario({ ...usuario, Nome: e.target.value })}
                     />
                 </Form.Item>
                 <Form.Item label="Email">
                     <Input
-                        value={usuario.email}
-                        onChange={(e) => setUsuario({ ...usuario, email: e.target.value })}
+                        value={usuario.Email}
+                        onChange={(e) => setUsuario({ ...usuario, Email: e.target.value })}
                     />
                 </Form.Item>
                 <Form.Item label="Senha">
                     <Input
                         type="password"
-                        value={usuario.senha}
-                        onChange={(e) => setUsuario({ ...usuario, senha: e.target.value })}
+                        value={usuario.Senha}
+                        onChange={(e) => setUsuario({ ...usuario, Senha: e.target.value })}
                     />
                 </Form.Item>
                 <Button type="primary" htmlType="submit">

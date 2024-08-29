@@ -1,41 +1,53 @@
 const { sql, connectToDatabase } = require('../config/db');
 
-// Função para verificar se a coluna "Senha" existe na tabela "Usuarios" e adicioná-la se não existir
-async function checkAndAddColumn(req, res, next) {
+async function checkAndModifyColumn(req, res) {
+    const { coluna, acao } = req.body;
+
     try {
-        // Conecta ao banco de dados
         await connectToDatabase();
 
-        // Consulta para verificar se a coluna "Senha" existe na tabela "Usuarios"
-        const result = await sql.query`
-            SELECT COLUMN_NAME 
-            FROM INFORMATION_SCHEMA.COLUMNS 
-            WHERE TABLE_NAME = 'Usuarios' 
-            AND COLUMN_NAME = 'Senha'
-        `;
-
-        // Se a coluna não existir, adicione-a
-        if (result.recordset.length === 0) {
-            await sql.query`
-                ALTER TABLE Usuarios
-                ADD Senha NVARCHAR(255);
+        if (acao === 'verificar') {
+            const result = await sql.query`
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = 'Usuarios' 
+                AND COLUMN_NAME = ${coluna}
             `;
-            console.log('Coluna "Senha" foi adicionada à tabela Usuarios.');
+            if (result.recordset.length > 0) {
+                res.json({ message: `A coluna "${coluna}" já existe na tabela Usuarios.` });
+            } else {
+                res.json({ message: `A coluna "${coluna}" não existe na tabela Usuarios.` });
+            }
+        } else if (acao === 'adicionar') {
+            const result = await sql.query`
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = 'Usuarios' 
+                AND COLUMN_NAME = ${coluna}
+            `;
+            if (result.recordset.length === 0) {
+                await sql.query`
+                    ALTER TABLE Usuarios
+                    ADD ${sql.raw(coluna)} NVARCHAR(255);
+                `;
+                res.json({ message: `Coluna "${coluna}" foi adicionada à tabela Usuarios.` });
+            } else {
+                res.json({ message: `A coluna "${coluna}" já existe na tabela Usuarios.` });
+            }
+        } else if (acao === 'verificarColunas') {
+            const result = await sql.query`
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_NAME = 'Usuarios'
+            `;
+            res.json({ colunas: result.recordset.map(row => row.COLUMN_NAME) });
         } else {
-            console.log('Coluna "Senha" já existe na tabela Usuarios.');
+            res.status(400).json({ message: 'Ação inválida.' });
         }
-        next();
     } catch (err) {
-        console.error('Erro ao verificar ou adicionar coluna:', err);
-        res.status(500).send('Erro ao verificar ou adicionar coluna.');
+        console.error('Erro ao processar a requisição:', err);
+        res.status(500).send('Erro ao processar a requisição.');
     }
 }
 
-module.exports = checkAndAddColumn
-
-
-
-
-
-
-
+module.exports = checkAndModifyColumn;
