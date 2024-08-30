@@ -3,7 +3,6 @@ const router = express.Router();
 const { sql, connectToDatabase } = require('../config/db');
 const excluirUsuario = require('../controllers/excluirUsuario');
 
-// Garante que a conexão com o banco de dados seja estabelecida
 connectToDatabase();
 
 // Adicione essa lógica na rota de localização de usuário
@@ -28,7 +27,6 @@ router.get('/localizar', async (req, res) => {
             res.status(200).json({ message: 'Esse usuário não consta no Banco de Dados' });
         }
     } catch (error) {
-        // // console.error('Erro ao acessar o banco de dados:', error);
         res.status(500).json({ message: 'Erro ao acessar o banco de dados.' });
     }
 });
@@ -60,12 +58,12 @@ router.put('/alterar/:id', async (req, res) => {
 
         res.status(200).json({ message: 'Usuário alterado com sucesso!' });
     } catch (error) {
-        // // console.error('Erro ao alterar usuário:', error);
+
         res.status(500).json({ message: 'Erro ao alterar usuário.' });
     }
-}); // Altera um usuário existente
+});
 
 // Rota para excluir um usuário por ID
-router.delete('/excluir/:id', excluirUsuario.excluirUsuario); // Exclui um usuário existente
+router.delete('/excluir/:id', excluirUsuario.excluirUsuario); 
 
 module.exports = router;
