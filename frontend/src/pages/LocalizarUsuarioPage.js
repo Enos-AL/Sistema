@@ -10,25 +10,29 @@ const LocalizarUsuarioPage = () => {
     const handleLocalizar = async () => {
         try {
             const dados = await usuarioService.localizarUsuario(nome);
-            console.log('Dados recebidos:', dados);
 
-            // Se os dados foram encontrados, definimos o usuário
-            setUsuario(dados);
+            if (dados.message) {
+                // Quando o backend retorna uma mensagem, exiba-a como um alerta
+                alert(dados.message);
+                setUsuario(null); // Limpa os dados do usuário caso haja uma mensagem
+            } else {
+                // Quando o backend retorna os dados do usuário completo
+                setUsuario(dados);
+            }
         } catch (error) {
-            if (error.message.includes('Por favor, digite o nome completo') || 
-                error.message.includes('Esse usuário não consta no Banco de Dados')) {
-                console.warn('Erro tratado: ', error.message);
-                alert(error.message);
+            // Suprime o erro no console e exibe apenas mensagens de erro específicas
+            if (error.message.includes('Esse usuário não consta no Banco de Dados') ||
+                error.message.includes('Usuário encontrado, mas é necessário digitar o nome completo para localizar todos os dados.')) {
+                // // console.warn('Erro tratado: ', error.message);
             } else {
                 console.error('Erro ao localizar usuário:', error);
-                alert('Esse erro pode ocorrer devido à comunicação com o BD.');
             }
+            alert('Erro ao localizar usuário. Tente novamente mais tarde.');
         }
     };
 
     const handleAlterar = () => {
         if (usuario && usuario.id) {
-            console.log('Redirecionando para a página de alteração:', usuario.id);
             navigate(`/alterar-usuario/${usuario.id}`, { state: { usuario } });
         } else {
             console.error('Usuário não encontrado ou ID ausente.');

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { sql, connectToDatabase } = require('../config/db');
-const alterarUsuario = require('../controllers/alterarUsuario');
 const excluirUsuario = require('../controllers/excluirUsuario');
 
 // Garante que a conexão com o banco de dados seja estabelecida
@@ -20,22 +19,51 @@ router.get('/localizar', async (req, res) => {
 
         if (usuarios.recordset.length === 1 && usuarios.recordset[0].Nome === nome) {
             // Nome completo correspondente encontrado
-            res.json(usuarios.recordset[0]);
+            res.status(200).json(usuarios.recordset[0]);
         } else if (usuarios.recordset.length > 1 || (usuarios.recordset.length === 1 && usuarios.recordset[0].Nome !== nome)) {
             // Vários usuários ou um usuário com nome parcial encontrado
-            res.status(400).json({ message: 'Usuário encontrado, mas é necessário digitar o nome completo para localizar todos os dados.' });
+            res.status(200).json({ message: 'Usuário encontrado, mas é necessário digitar o nome completo para localizar todos os dados.' });
         } else {
             // Nenhum usuário encontrado
-            res.status(404).json({ message: 'Esse usuário não consta no Banco de Dados' });
+            res.status(200).json({ message: 'Esse usuário não consta no Banco de Dados' });
         }
     } catch (error) {
-        console.error('Erro ao acessar o banco de dados:', error);
+        // // console.error('Erro ao acessar o banco de dados:', error);
         res.status(500).json({ message: 'Erro ao acessar o banco de dados.' });
     }
 });
 
 // Rota para alterar um usuário por ID
-router.put('/alterar/:id', alterarUsuario.alterarUsuario); // Altera um usuário existente
+router.put('/alterar/:id', async (req, res) => {
+    const { id } = req.params;
+    const novosDados = req.body;
+
+    // Remove o campo 'id' dos novos dados
+    delete novosDados.id;
+
+    try {
+        const pool = await sql.connect();
+        const request = pool.request();
+
+        // Adiciona todos os campos ao request
+        Object.keys(novosDados).forEach((campo) => {
+            request.input(campo, sql.NVarChar, novosDados[campo]);
+        });
+
+        // Constrói a string da query dinamicamente, excluindo o campo 'id'
+        const setQuery = Object.keys(novosDados).map(campo => `${campo} = @${campo}`).join(', ');
+
+        const query = `UPDATE Usuarios SET ${setQuery} WHERE id = @id`;
+
+        request.input('id', sql.Int, id); // Adiciona o ID como input
+        await request.query(query);
+
+        res.status(200).json({ message: 'Usuário alterado com sucesso!' });
+    } catch (error) {
+        // // console.error('Erro ao alterar usuário:', error);
+        res.status(500).json({ message: 'Erro ao alterar usuário.' });
+    }
+}); // Altera um usuário existente
 
 // Rota para excluir um usuário por ID
 router.delete('/excluir/:id', excluirUsuario.excluirUsuario); // Exclui um usuário existente

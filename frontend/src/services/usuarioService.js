@@ -5,8 +5,13 @@ const API_URL = 'http://localhost:3000/usuarios';
 const usuarioService = {
     // Alterar Usuário Existente
     alterarUsuario: async (id, novosDados) => {
-        const response = await axios.put(`${API_URL}/alterar/${id}?confirmacao=true`, novosDados);
-        return response.data;
+        try {
+            const response = await axios.put(`${API_URL}/alterar/${id}?confirmacao=true`, novosDados);
+            return response.data;
+        } catch (error) {
+            const errorMessage = error.response?.data || 'Erro ao alterar usuário.';
+            throw new Error(errorMessage);
+        }
     },
 
     // Localizar Usuário por nome
@@ -17,22 +22,28 @@ const usuarioService = {
             });
             return response.data;
         } catch (error) {
-            if (error.response && error.response.status === 400) {
-                throw new Error('Digite o nome completo do usuário.');
-            } else if (error.response && error.response.status === 404) {
-                throw new Error('Esse usuário não consta no Banco de Dados.');
-            } else {
-                throw new Error('Esse erro pode ocorrer devido a comunicação com o BD');
+            let errorMessage = 'Erro ao localizar usuário.';
+            if (error.response) {
+                if (error.response.status === 400) {
+                    errorMessage = 'Digite o nome completo do usuário.';
+                } else if (error.response.status === 404) {
+                    errorMessage = 'Esse usuário não consta no Banco de Dados.';
+                }
             }
+            throw new Error(errorMessage);
         }
     },
 
     // Excluir Usuário por ID
     excluirUsuario: async (id) => {
-        const response = await axios.delete(`${API_URL}/excluir/${id}`);
-        return response.data;
+        try {
+            const response = await axios.delete(`${API_URL}/excluir/${id}`);
+            return response.data;
+        } catch (error) {
+            const errorMessage = error.response?.data || 'Erro ao excluir usuário.';
+            throw new Error(errorMessage);
+        }
     },
 };
 
 export default usuarioService;
-
