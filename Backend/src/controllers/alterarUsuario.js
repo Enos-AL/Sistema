@@ -26,11 +26,7 @@ async function alterarUsuario(req, res) {
         }
 
         // Cria a query de atualização com base nos novos dados fornecidos dinamicamente
-        const queryParts = Object.keys(novosDados).map(coluna => {
-            const valor = novosDados[coluna];
-            // Escapa o valor para evitar SQL Injection
-            return `${coluna} = ${sql`${valor}`}`;
-        }).join(', ');
+        const queryParts = Object.keys(novosDados).map(coluna => `${coluna} = '${novosDados[coluna]}'`).join(', ');
 
         // Verifica se há dados para alterar
         if (queryParts.length === 0) {

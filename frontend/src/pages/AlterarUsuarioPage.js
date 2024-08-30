@@ -5,18 +5,20 @@ import usuarioService from '../services/usuarioService';
 const AlterarUsuarioPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const [usuario, setUsuario] = useState(location.state?.usuario || {});
+    const [usuario, setUsuario] = useState({});
+    const [id, setId] = useState('');
 
     useEffect(() => {
-        // Verifica se os dados do usuário foram passados corretamente
-        if (!usuario.id) {
-            navigate('/localizar-usuario');
+        const { state } = location;
+        if (state && state.usuario) {
+            setUsuario(state.usuario);
+            setId(state.usuario.id);
         }
-    }, [usuario.id, navigate]);
+    }, [location]);
 
     const handleAlterar = async () => {
         try {
-            await usuarioService.alterarUsuario(usuario.id, usuario);
+            await usuarioService.alterarUsuario(id, usuario);
             alert('Usuário alterado com sucesso!');
             navigate('/localizar-usuario');
         } catch (error) {
@@ -24,36 +26,27 @@ const AlterarUsuarioPage = () => {
         }
     };
 
-    const handleExcluir = () => {
-        if (window.confirm('Deseja realmente excluir este usuário?')) {
-            navigate(`/excluir-usuario`, { state: { usuario } });
-        }
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUsuario(prevUsuario => ({
-            ...prevUsuario,
-            [name]: value
-        }));
+        setUsuario((prevUsuario) => ({ ...prevUsuario, [name]: value }));
     };
 
     return (
         <div>
             <h1>Alterar Usuário</h1>
-            {Object.keys(usuario).map((coluna) => (
-                <div key={coluna}>
-                    <label>{coluna}:</label>
+            {Object.keys(usuario).map((key) => (
+                <div key={key}>
+                    <label>{key}:</label>
                     <input 
                         type="text" 
-                        name={coluna}  // Atributo name adicionado para identificar o campo
-                        value={usuario[coluna] || ''} // Garante que o valor seja uma string vazia se undefined
-                        onChange={handleChange} 
+                        name={key}
+                        value={usuario[key] || ''}
+                        onChange={handleChange}
                     />
                 </div>
             ))}
             <button onClick={handleAlterar}>Alterar Usuário</button>
-            <button onClick={handleExcluir}>Excluir Usuário</button>
+            <button onClick={() => navigate(`/excluir-usuario/${id}`)}>Excluir Usuário</button>
         </div>
     );
 };

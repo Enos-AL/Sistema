@@ -1,38 +1,29 @@
 const { sql, connectToDatabase } = require('../config/db');
 
-// Função para localizar um usuário na tabela "Usuarios" por ID ou nome
+// Função para localizar um usuário na tabela "Usuarios" por nome
 async function localizarUsuario(req, res) {
-    const id = req.query.id;
-    const nomeCompleto = req.query.nome;
+    const nomeCompleto = req.query.nome;  // Recebe o nome completo passado como parâmetro na URL
+
+    if (!nomeCompleto) {
+        return res.status(400).send('Nome não fornecido.');
+    }
 
     try {
-        await connectToDatabase();
+        await connectToDatabase();  // Conecta ao banco de dados
 
-        let result;
-        if (id) {
-            // Consulta o usuário pelo ID
-            result = await sql.query`SELECT * FROM Usuarios WHERE ID = ${parseInt(id, 10)}`;
-        } else if (nomeCompleto) {
-            // Divide o nome completo em partes, assumindo que é no formato "PrimeiroNome.SegundoNome"
-            const [primeiroNome, segundoNome] = nomeCompleto.split('.');
+        // Consulta pelo nome completo, garantindo que o id seja incluído na resposta
+        const result = await sql.query`
+        SELECT * FROM Usuarios 
+        WHERE Nome = ${nomeCompleto}
+    `;
+    
 
-            // Consulta pelo nome completo (primeiro e segundo nome separados por espaço)
-            result = await sql.query`
-                SELECT * FROM Usuarios 
-                WHERE Nome = ${primeiroNome} + ' ' + ${segundoNome}
-                OR Nome = ${nomeCompleto}
-            `;
-        } else {
-            return res.status(400).send('Por favor, forneça um ID ou nome completo para localizar o usuário.');
-        }
-
+        // Se não encontrar o usuário, retorna erro 404
         if (result.recordset.length === 0) {
             return res.status(404).send('Usuário não encontrado.');
         }
 
-        // Assume-se que o resultado deve ser um único registro
-        const usuario = result.recordset[0];
-        res.json(usuario);
+        res.json(result.recordset[0]);  // Retorna os dados do usuário encontrado
     } catch (err) {
         console.error('Erro ao localizar usuário:', err);
         res.status(500).send('Erro ao localizar usuário.');
