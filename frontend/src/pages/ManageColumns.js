@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { handleFormSubmit } from '../services/configManageColumns';
+import { Link } from 'react-router-dom';  // Para navegação
 
 function ManageColumns() {
     const [coluna, setColuna] = useState('');
@@ -23,51 +24,58 @@ function ManageColumns() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Coluna:
-                <input 
-                    type="text" 
-                    value={coluna} 
-                    onChange={(e) => setColuna(e.target.value)} 
-                    disabled={acao === 'listar'}
-                />
-            </label>
-            {acao === 'alterar' && (
+        <div>
+            <form onSubmit={handleSubmit}>
                 <label>
-                    Nova Coluna:
+                    Coluna:
                     <input 
                         type="text" 
-                        value={novaColuna} 
-                        onChange={(e) => setNovaColuna(e.target.value)} 
+                        value={coluna} 
+                        onChange={(e) => setColuna(e.target.value)} 
+                        disabled={acao === 'listar'}
                     />
                 </label>
-            )}
-            <label>
-                Ação:
-                <select 
-                    value={acao} 
-                    onChange={handleAcaoChange}
-                >
-                    <option value="verificar">Verificar</option>
-                    <option value="adicionar">Adicionar</option>
-                    <option value="excluir">Excluir</option>
-                    <option value="alterar">Alterar</option>
-                    <option value="listar">Listar Todas as Colunas</option>
-                </select>
-            </label>
-            <label>
-                API Key:
-                <input 
-                    type="password" 
-                    value={apiKey} 
-                    onChange={(e) => setApiKey(e.target.value)} 
-                />
-            </label>
-            <button type="submit">Enviar</button>
+                {acao === 'alterar' && (
+                    <label>
+                        Nova Coluna:
+                        <input 
+                            type="text" 
+                            value={novaColuna} 
+                            onChange={(e) => setNovaColuna(e.target.value)} 
+                        />
+                    </label>
+                )}
+                <label>
+                    Ação:
+                    <select 
+                        value={acao} 
+                        onChange={handleAcaoChange}
+                    >
+                        <option value="verificar">Verificar</option>
+                        <option value="adicionar">Adicionar</option>
+                        <option value="excluir">Excluir</option>
+                        <option value="alterar">Alterar</option>
+                        <option value="listar">Listar Todas as Colunas</option>
+                    </select>
+                </label>
+                <label>
+                    API Key:
+                    <input 
+                        type="password" 
+                        value={apiKey} 
+                        onChange={(e) => setApiKey(e.target.value)} 
+                    />
+                </label>
+                <button type="submit">Enviar</button>
 
-            {mensagem && <p className="message">{mensagem}</p>}
-        </form>
+                {mensagem && <p className="message">{mensagem}</p>}
+            </form>
+
+            {/* Link para a página de gráficos */}
+            <div style={{ marginTop: '20px' }}>
+                <Link to="/graficos">Visualizar Gráficos</Link>
+            </div>
+        </div>
     );
 }
 

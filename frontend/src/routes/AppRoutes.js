@@ -1,14 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ManageColumns from '../pages/ManageColumns';
+import ColumnCharts from '../pages/ColumnCharts';
 
+function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/colunas" element={<ManageColumns />} />
+                <Route path="/graficos" element={<ColumnCharts />} />
+            </Routes>
+        </Router>
+    );
+}
 
-const AppRoutes = () => (
-    <Router>
-        <Routes>
-            <Route path="/manage-columns" element={<ManageColumns />} /> 
-        </Routes>
-    </Router>
-);
-
-export default AppRoutes;
+export default App;
