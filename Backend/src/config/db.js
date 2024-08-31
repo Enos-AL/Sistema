@@ -11,19 +11,23 @@ const dbConfig = {
         trustServerCertificate: true,
     },
     port: parseInt(process.env.DB_PORT, 10) || 1433,
+    pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000,
+    },
+    // Aumentando o timeout para 30 segundos
+    requestTimeout: 30000 // 30 segundos
 };
 
 async function connectToDatabase() {
     try {
-        await sql.connect(dbConfig);
-        console.log('Conexão com o banco de dados SQL Server bem-sucedida!');
+        const pool = await sql.connect(dbConfig);
+        console.log('Conectado ao banco de dados.');
+        return pool;
     } catch (err) {
-        console.error('Erro ao conectar com o banco de dados:', err.message);
-        console.log('DB_SERVER:', process.env.DB_SERVER);
-        console.log('DB_USER:', process.env.DB_USER);
-        console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
-        console.log('DB_NAME:', process.env.DB_NAME);
-        console.log('DB_PORT:', process.env.DB_PORT);
+        console.error('Erro ao conectar ao banco de dados:', err);
+        throw err;
     }
 }
 
@@ -31,3 +35,4 @@ module.exports = {
     sql,
     connectToDatabase,
 };
+

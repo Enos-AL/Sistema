@@ -1,0 +1,150 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+form {
+    max-width: 100%;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+input, select, button {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #ffffff;
+    }
+
+    form {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    label {
+        color: #000000;
+    }
+
+    input, select {
+        background-color: #f0f0f0;
+        color: #000000;
+        border-color: #ccc;
+    }
+
+    input:hover, input:focus, select:hover, select:focus {
+        background-color: #e0e0e0;
+        color: #000000;
+        border-color: #999;
+        outline: none;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #181818;
+    }
+
+    form {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    label {
+        color: #ffffff;
+    }
+
+    input, select {
+        background-color: #333333;
+        color: #ffffff;
+        border-color: #555;
+    }
+
+    input:hover, input:focus, select:hover, select:focus {
+        background-color: #444444;
+        color: #ffffff;
+        border-color: #888;
+        outline: none;
+    }
+
+    button {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    button:hover {
+        background-color: #007bff;
+    }
+}
+
+@media (max-width: 600px) {
+    form {
+        padding: 10px;
+    }
+
+    input, select, button {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+.message {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 14px;
+    border: 1px solid;
+    box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: light) {
+    .message {
+        background-color: #e0f7fa;
+        color: #00796b;
+        border-color: #00796b;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .message {
+        background-color: #333333;
+        color: #ffffff;
+        border-color: #555555;
+    }
+}
