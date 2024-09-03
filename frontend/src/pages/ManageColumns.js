@@ -85,7 +85,7 @@ const ManageColumns = () => {
                     />
                 </label>
                 {formState.acao === 'alterar' && (
-                    <input
+                    <label><input
                         type="text"
                         name="novaColuna"
                         placeholder="Nova Coluna"
@@ -93,6 +93,7 @@ const ManageColumns = () => {
                         onChange={handleChange}
                         className="input-field"
                     />
+                    </label>
                 )}
                 <select
                     name="acao"
@@ -107,14 +108,16 @@ const ManageColumns = () => {
                     <option value="alterar">Alterar</option>
                     <option value="listar">Listar Todas as Colunas</option>
                 </select>
-                <input
-                    type="password"
-                    name="apiKey"
-                    placeholder="API Key"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    className="input-field"
-                />
+                <label>
+                    <input
+                        type="password"
+                        name="apiKey"
+                        placeholder="API Key"
+                        value={apiKey}
+                        onChange={(e) => setApiKey(e.target.value)}
+                        className="input-field"
+                    />
+                </label>
                 <button type="submit" className="submit-button">Executar</button>
 
                 {/* Exibe as mensagens de erro abaixo do botão */}

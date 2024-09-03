@@ -60,7 +60,7 @@ button:hover {
     margin: 0 auto;
 }
 
-.chart-container > canvas {
+.chart-container>canvas {
     width: 100%;
     height: 100%;
 }
@@ -76,7 +76,8 @@ button:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     font-size: 14px;
     box-sizing: border-box;
-    line-height: 1.5; /* Ajuste o espaçamento entre linhas */
+    line-height: 1.5;
+    /* Ajuste o espaçamento entre linhas */
 }
 
 
@@ -91,7 +92,8 @@ button:hover {
     }
 
     h1 {
-        color: #000000; /* Título "Gerenciar Colunas" em preto no tema claro */
+        color: #000000;
+        /* Título "Gerenciar Colunas" em preto no tema claro */
     }
 
     input,
@@ -120,18 +122,34 @@ button:hover {
         background-color: rgba(255, 255, 255, 0.9);
     }
 
+    /* Estilo para mensagens de sucesso ou informações */
     .message {
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 8px;
         background-color: #e0f7fa;
+        /* Fundo para mensagens */
         color: #00796b;
-        border-color: #00796b;
+        /* Cor do texto */
+        border: 1px solid #00796b;
+        /* Cor da borda */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        /* Sombra */
+        font-size: 14px;
+        box-sizing: border-box;
+        line-height: 1.5;
     }
 
     /* Estilo para mensagens de erro */
     .error-messages {
-        background-color: #ffdddd; /* Fundo vermelho claro */
-        color: #cc0000; /* Texto vermelho mais escuro */
-        border-color: #cc0000; /* Borda combinando com o texto */
-        box-shadow: 0px 4px 8px rgba(204, 0, 0, 0.3); /* Sombra para destacar a mensagem */
+        background-color: #ffdddd;
+        /* Fundo vermelho claro */
+        color: #cc0000;
+        /* Texto vermelho mais escuro */
+        border-color: #cc0000;
+        /* Borda combinando com o texto */
+        box-shadow: 0px 4px 8px rgba(204, 0, 0, 0.3);
+        /* Sombra para destacar a mensagem */
     }
 }
 
@@ -146,7 +164,8 @@ button:hover {
     }
 
     h1 {
-        color: #928a8a; /* Título "Gerenciar Colunas" em branco no tema escuro */
+        color: #928a8a;
+        /* Título "Gerenciar Colunas" em branco no tema escuro */
     }
 
     input,
@@ -184,17 +203,33 @@ button:hover {
         background-color: rgba(0, 0, 0, 0.7);
     }
 
+    /* Estilo para mensagens de sucesso ou informações */
     .message {
-        background-color: #333333;
-        color: #ffffff;
-        border-color: #555555;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 8px;
+        background-color: #e0f7fa;
+        /* Fundo para mensagens */
+        color: #00796b;
+        /* Cor do texto */
+        border: 1px solid #00796b;
+        /* Cor da borda */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        /* Sombra */
+        font-size: 14px;
+        box-sizing: border-box;
+        line-height: 1.5;
     }
 
     .error-messages {
-        background-color: #581a1a; /* Fundo vermelho escuro */
-        color: #ffcccc; /* Texto vermelho claro */
-        border-color: #ff6666; /* Borda combinando com o texto */
-        box-shadow: 0px 4px 8px rgba(255, 102, 102, 0.4); /* Sombra para destacar a mensagem */
+        background-color: #581a1a;
+        /* Fundo vermelho escuro */
+        color: #ffcccc;
+        /* Texto vermelho claro */
+        border-color: #ff6666;
+        /* Borda combinando com o texto */
+        box-shadow: 0px 4px 8px rgba(255, 102, 102, 0.4);
+        /* Sombra para destacar a mensagem */
     }
 }
 
