@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCDCData, handleFormSubmit } from '../services/cdcService';
-import '../public/theme.css';  // Atualize para o caminho correto se necessário
+import '../../src/public/theme.css';  // Atualize para o caminho correto se necessário
 
 import { Link } from 'react-router-dom';
 
@@ -116,7 +116,7 @@ const ManageColumns = () => {
                     className="input-field"
                 />
                 <button type="submit" className="submit-button">Executar</button>
-                
+
                 {/* Exibe as mensagens de erro abaixo do botão */}
                 {errorMessages.length > 0 && (
                     <div className="error-messages">

@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: 'http://localhost:3000/usuarios', // URL do backend
+    withCredentials: true,  
 });
 
 // Função para buscar dados de colunas

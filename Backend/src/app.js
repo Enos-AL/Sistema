@@ -13,9 +13,9 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 
-// Configuração do CORS
 app.use(cors({
-    origin: 'http://localhost:3001' // Substitua pelo domínio do seu frontend
+    origin: 'http://localhost:3001', // URL do frontend
+    credentials: true,
 }));
 
 // Configurar para servir arquivos estáticos da pasta 'public'

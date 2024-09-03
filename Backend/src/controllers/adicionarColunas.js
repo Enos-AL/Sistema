@@ -1,5 +1,6 @@
 const { sql, connectToDatabase } = require('../config/db');
 
+
 async function adicionarColunas(req, res) {
     const { coluna, acao, novaColuna, apiKey } = req.body;
 
