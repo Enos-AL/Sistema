@@ -1,3 +1,4 @@
+// src/config/db.js
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.env') });
 const sql = require('mssql');
 
@@ -36,3 +37,4 @@ module.exports = {
     connectToDatabase,
 };
 
+// Arquivo de configuração do .env => frontend/.env

@@ -1,0 +1,213 @@
+/* Estilo básico */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+form {
+    max-width: 100%;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+    box-sizing: border-box;
+}
+
+/* Estilo para inputs, selects e buttons */
+input,
+select,
+button {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para containers de gráficos */
+.chart-container {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.9);
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.chart-container > canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Estilo para mensagens de erro */
+.error-messages {
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    background-color: #fdd;
+    color: red;
+    border: 1px solid red;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    box-sizing: border-box;
+    line-height: 1.5; /* Ajuste o espaçamento entre linhas */
+}
+
+
+/* Tema claro */
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #ffffff;
+    }
+
+    form {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    h1 {
+        color: #000000; /* Título "Gerenciar Colunas" em preto no tema claro */
+    }
+
+    input,
+    select {
+        background-color: #f0f0f0;
+        color: #000000;
+        border-color: #ccc;
+    }
+
+    input::placeholder,
+    select option:first-child {
+        color: #000000;
+    }
+
+    input:hover,
+    input:focus,
+    select:hover,
+    select:focus {
+        background-color: #e0e0e0;
+        color: #000000;
+        border-color: #999;
+        outline: none;
+    }
+
+    .chart-container {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .message {
+        background-color: #e0f7fa;
+        color: #00796b;
+        border-color: #00796b;
+    }
+
+    /* Estilo para mensagens de erro */
+    .error-messages {
+        background-color: #ffdddd; /* Fundo vermelho claro */
+        color: #cc0000; /* Texto vermelho mais escuro */
+        border-color: #cc0000; /* Borda combinando com o texto */
+        box-shadow: 0px 4px 8px rgba(204, 0, 0, 0.3); /* Sombra para destacar a mensagem */
+    }
+}
+
+/* Tema escuro */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #181818;
+    }
+
+    form {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+        color: #928a8a; /* Título "Gerenciar Colunas" em branco no tema escuro */
+    }
+
+    input,
+    select {
+        background-color: #333333;
+        color: #928a8a;
+        border-color: #555;
+    }
+
+    input::placeholder,
+    select option:first-child {
+        color: #928a8a;
+    }
+
+    input:hover,
+    input:focus,
+    select:hover,
+    select:focus {
+        background-color: #444444;
+        color: #928a8a;
+        border-color: #888;
+        outline: none;
+    }
+
+    button {
+        background-color: #0056b3;
+        color: #928a8a;
+    }
+
+    button:hover {
+        background-color: #007bff;
+    }
+
+    .chart-container {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .message {
+        background-color: #333333;
+        color: #ffffff;
+        border-color: #555555;
+    }
+
+    .error-messages {
+        background-color: #581a1a; /* Fundo vermelho escuro */
+        color: #ffcccc; /* Texto vermelho claro */
+        border-color: #ff6666; /* Borda combinando com o texto */
+        box-shadow: 0px 4px 8px rgba(255, 102, 102, 0.4); /* Sombra para destacar a mensagem */
+    }
+}
+
+/* Estilo responsivo para telas pequenas */
+@media (max-width: 600px) {
+    form {
+        padding: 10px;
+    }
+
+    input,
+    select,
+    button {
+        padding: 8px;
+        font-size: 14px;
+    }
+}

@@ -1,82 +1,143 @@
-import React, { useState } from 'react';
-import { handleFormSubmit } from '../services/configManageColumns';
-import { Link } from 'react-router-dom';  // Para navegação
+import React, { useState, useEffect } from 'react';
+import { fetchCDCData, handleFormSubmit } from '../services/cdcService';
+import '../public/theme.css';  // Atualize para o caminho correto se necessário
 
-function ManageColumns() {
-    const [coluna, setColuna] = useState('');
-    const [novaColuna, setNovaColuna] = useState('');
-    const [acao, setAcao] = useState('verificar');
+import { Link } from 'react-router-dom';
+
+const ManageColumns = () => {
+    const [coluna, setColuna] = useState([]);
+    const [data, setData] = useState(null);
     const [apiKey, setApiKey] = useState('');
-    const [mensagem, setMensagem] = useState('');
+    const [formState, setFormState] = useState({
+        coluna: '',
+        novaColuna: '',
+        acao: '',
+        apiKey: '',
+    });
+    const [message, setMessage] = useState('');
+    const [errorMessages, setErrorMessages] = useState([]); // Novo estado para armazenar mensagens de erro
 
-    const handleAcaoChange = (e) => {
-        setAcao(e.target.value);
-        setColuna('');
-        setNovaColuna('');
-        setApiKey('');
-        setMensagem('');
+    useEffect(() => {
+        fetchCDCData()
+            .then(response => {
+                setData(response);
+                setColuna(Array.isArray(response.coluna) ? response.coluna : []);
+            })
+            .catch(error => console.error('Erro ao buscar dados CDC:', error));
+    }, []);
+
+    const handleChange = (e) => {
+        setFormState({
+            ...formState,
+            [e.target.name]: e.target.value
+        });
     };
 
-    const handleSubmit = async (e) => {
+    const validateForm = () => {
+        const errors = [];
+
+        if (!formState.acao) {
+            errors.push('Por favor, selecione uma ação.');
+        }
+        if (formState.acao !== 'listar' && !formState.coluna) {
+            errors.push('Por favor, preencha o campo "Coluna".');
+        }
+        if (formState.acao === 'alterar' && !formState.novaColuna) {
+            errors.push('Por favor, preencha o campo "Nova Coluna".');
+        }
+        if (!apiKey) {
+            errors.push('Por favor, forneça a API Key.');
+        }
+
+        setErrorMessages(errors); // Atualiza o estado das mensagens de erro
+        return errors.length === 0;
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const { message } = await handleFormSubmit({ coluna, novaColuna, acao, apiKey });
-        setMensagem(message);
+        if (!validateForm()) {
+            return; // Se houver erros, não prossegue com a submissão
+        }
+
+        handleFormSubmit({ ...formState, apiKey })
+            .then(response => {
+                setMessage(response.message);
+                setFormState({ coluna: '', novaColuna: '', acao: '', apiKey: '' });
+                setApiKey('');
+                setErrorMessages([]); // Limpa as mensagens de erro após submissão bem-sucedida
+            })
+            .catch(error => setMessage('Erro ao processar a solicitação.'));
     };
 
     return (
-        <div>
+        <div className="container">
+            <h1 className="page-title">Gerenciar Colunas</h1>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Coluna:
-                    <input 
-                        type="text" 
-                        value={coluna} 
-                        onChange={(e) => setColuna(e.target.value)} 
-                        disabled={acao === 'listar'}
+                    <input
+                        type="text"
+                        name="coluna"
+                        placeholder="Coluna"
+                        value={formState.coluna}
+                        onChange={handleChange}
+                        disabled={formState.acao === 'listar'}
+                        className="input-field"
                     />
                 </label>
-                {acao === 'alterar' && (
-                    <label>
-                        Nova Coluna:
-                        <input 
-                            type="text" 
-                            value={novaColuna} 
-                            onChange={(e) => setNovaColuna(e.target.value)} 
-                        />
-                    </label>
+                {formState.acao === 'alterar' && (
+                    <input
+                        type="text"
+                        name="novaColuna"
+                        placeholder="Nova Coluna"
+                        value={formState.novaColuna}
+                        onChange={handleChange}
+                        className="input-field"
+                    />
                 )}
-                <label>
-                    Ação:
-                    <select 
-                        value={acao} 
-                        onChange={handleAcaoChange}
-                    >
-                        <option value="verificar">Verificar</option>
-                        <option value="adicionar">Adicionar</option>
-                        <option value="excluir">Excluir</option>
-                        <option value="alterar">Alterar</option>
-                        <option value="listar">Listar Todas as Colunas</option>
-                    </select>
-                </label>
-                <label>
-                    API Key:
-                    <input 
-                        type="password" 
-                        value={apiKey} 
-                        onChange={(e) => setApiKey(e.target.value)} 
-                    />
-                </label>
-                <button type="submit">Enviar</button>
+                <select
+                    name="acao"
+                    value={formState.acao}
+                    onChange={handleChange}
+                    className="input-field"
+                >
+                    <option value="">Selecione uma ação</option>
+                    <option value="verificar">Verificar</option>
+                    <option value="adicionar">Adicionar</option>
+                    <option value="excluir">Excluir</option>
+                    <option value="alterar">Alterar</option>
+                    <option value="listar">Listar Todas as Colunas</option>
+                </select>
+                <input
+                    type="password"
+                    name="apiKey"
+                    placeholder="API Key"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="input-field"
+                />
+                <button type="submit" className="submit-button">Executar</button>
+                
+                {/* Exibe as mensagens de erro abaixo do botão */}
+                {errorMessages.length > 0 && (
+                    <div className="error-messages">
+                        {errorMessages.map((msg, index) => (
+                            <div key={index} className="error">{msg}</div>
+                        ))}
+                    </div>
+                )}
 
-                {mensagem && <p className="message">{mensagem}</p>}
+                {message && <div className="message">{message}</div>}
             </form>
-
-            {/* Link para a página de gráficos */}
-            <div style={{ marginTop: '20px' }}>
-                <Link to="/graficos">Visualizar Gráficos</Link>
+            <ul>
+                {coluna.map(coluna => (
+                    <li key={coluna.id}>{coluna.nome}</li>
+                ))}
+            </ul>
+            <div className="link-container">
+                <Link to="/graficos" className="view-charts-link">Visualizar Gráficos</Link>
             </div>
         </div>
     );
-}
+};
 
 export default ManageColumns;

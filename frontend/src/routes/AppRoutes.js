@@ -1,3 +1,4 @@
+// src/routes/AppRoutes.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ManageColumns from '../pages/ManageColumns';
@@ -7,7 +8,7 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/colunas" element={<ManageColumns />} />
+                <Route path="/" element={<ManageColumns />} />
                 <Route path="/graficos" element={<ColumnCharts />} />
             </Routes>
         </Router>

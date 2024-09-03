@@ -1,26 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Bar, Pie } from 'react-chartjs-2';
-import { fetchColumnData } from '../services/cdcService'; // Certifique-se de que a importação está correta
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
-
 const ColumnCharts = () => {
     const [chartData, setChartData] = useState(null);
-    const [error, setError] = useState('');
+    const [error, setError] = useState(''); // Adiciona estado para mensagens de erro
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchColumnData();
+        fetchColumnData()
+            .then(data => {
+                // Preparar dados para gráfico de barras
                 const barData = {
                     labels: data.contagemColunas.map(item => item.coluna),
                     datasets: [{
@@ -32,6 +17,7 @@ const ColumnCharts = () => {
                     }]
                 };
 
+                // Preparar dados para gráfico de pizza
                 const pieData = {
                     labels: data.contagemColunas.map(item => item.coluna),
                     datasets: [{
@@ -57,23 +43,35 @@ const ColumnCharts = () => {
                     }]
                 };
 
-                setChartData({ barData, pieData });
-            } catch (error) {
+                // Configuração das opções para o gráfico de pizza
+                const pieOptions = {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                                }
+                            }
+                        }
+                    }
+                };
+
+                setChartData({ barData, pieData, pieOptions });
+            })
+            .catch(error => {
                 setError('Erro ao buscar dados do gráfico.');
                 console.error('Erro ao buscar dados do gráfico:', error);
-            }
-        };
-
-        fetchData(); // Fetch initial data
-
-        const interval = setInterval(fetchData, 5000); // Poll every 5 seconds
-
-        return () => clearInterval(interval); // Cleanup on unmount
+            });
     }, []);
 
     return (
         <div className="container">
             <h2>Gráficos</h2>
+            {error && <div className="error-message">{error}</div>} {/* Exibe mensagem de erro */}
             <div className="chart-container">
                 <h3>Total de Informações por Coluna</h3>
                 {chartData && <Bar data={chartData.barData} options={{ responsive: true }} />}
@@ -82,7 +80,6 @@ const ColumnCharts = () => {
                 <h3>Quantidade por Coluna</h3>
                 {chartData && <Pie data={chartData.pieData} options={{ responsive: true }} />}
             </div>
-            {error && <div className="error-message">{error}</div>}
         </div>
     );
 };
